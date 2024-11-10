@@ -46,6 +46,11 @@ class MainActivity : AppCompatActivity() {
             scene.render(canvas)
         }
 
+        private fun onDestroy()
+        {
+            scene.onDestroy()
+        }
+
 
         override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
             val e = motionEvent ?: return false

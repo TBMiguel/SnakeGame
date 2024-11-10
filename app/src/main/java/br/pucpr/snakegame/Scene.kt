@@ -8,5 +8,6 @@ interface Scene {
     fun update(et: Float)
     fun render(canvas: Canvas)
     fun onTouch(e: MotionEvent): Boolean
+    fun onDestroy()
 
 }

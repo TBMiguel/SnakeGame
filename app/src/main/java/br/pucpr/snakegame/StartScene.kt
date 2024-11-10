@@ -41,4 +41,10 @@ class StartScene(private val screen: MainActivity.Screen): Scene {
             else -> false
         }
     }
+
+    override fun onDestroy() {
+        TODO("Not yet implemented")
+    }
+
+
 }

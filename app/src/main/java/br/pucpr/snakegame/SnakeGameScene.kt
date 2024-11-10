@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.media.SoundPool
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
@@ -11,6 +12,9 @@ import kotlin.math.abs
 import kotlin.random.Random
 
 class SnakeGameScene(private val screen: MainActivity.Screen) : Scene {
+
+    private lateinit var soundPool: SoundPool
+    private var eatSoundId: Int = 0
 
     private val WIN_CONDITION = 80
     private val snakePaint = Paint().apply { color = Color.GREEN }
@@ -29,6 +33,14 @@ class SnakeGameScene(private val screen: MainActivity.Screen) : Scene {
     private val minSwipeDistance = 100f // Distancia minima para detectar um deslize na tela
 
     init {
+        // Inicializa SoundPool
+        soundPool = SoundPool.Builder()
+                            .setMaxStreams(5)
+                            .build()
+
+        //Carrega o efeito que retorna o id
+        eatSoundId = soundPool.load(screen.context, R.raw.eat_sound, 1)
+
         snakeSegments.add(Rect(100, 100, 150, 150)) // inicia cobra e comida
         spawnFood()
     }
@@ -115,6 +127,9 @@ class SnakeGameScene(private val screen: MainActivity.Screen) : Scene {
         if (newHead.intersect(foodRect!!)) {
             score += 10 // Aumenta pontuação
             spawnFood() // Spawna uma nova comida em uma localização randomica
+
+            // Toca o efeito de comer
+            soundPool.play(eatSoundId, 1f, 1f, 0, 0, 1f)
         } else {
             // Se nenhum alimento for comido, remova o último segmento para simular o movimento
             snakeSegments.removeAt(snakeSegments.size - 1)
@@ -150,5 +165,9 @@ class SnakeGameScene(private val screen: MainActivity.Screen) : Scene {
 
     enum class Direction {
         UP, DOWN, LEFT, RIGHT
+    }
+
+    override fun onDestroy() {
+        soundPool.release()
     }
 }
